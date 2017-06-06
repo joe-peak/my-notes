@@ -56,7 +56,7 @@ mapState 函数返回的是一个对象。我们如何将它与局部计算属�
 	  })
 	}
 >	
->##Getters
+> ## Getters
 Vuex 允许我们在 store 中定义『getters』（可以认为是 store 的计算属性）。Getters 接受 state 作为其第一个参数,Getters 也可以接受其他 getters 作为第二个参数
 >
 	getters: {
@@ -72,9 +72,9 @@ Vuex 允许我们在 store 中定义『getters』（可以认为是 store 的计
 	    return this.$store.getters.doneTodosCount
 	  }
 	}
-##mapGetters 辅助函数
+> ## mapGetters 辅助函数
 mapGetters 辅助函数仅仅是将 store 中的 getters 映射到局部计算属性,用法与mapState完全一致
-##Mutations
+> ## Mutations
 更改 Vuex 的 store 中的状态的唯一方法是提交 mutation。Vuex 中的 mutations 非常类似于事件：每个 mutation 都有一个字符串的 事件类型 (type) 和 一个 回调函数 (handler)。这个回调函数就是我们实际进行状态更改的地方，并且它会接受 state 作为第一个参数：
 >
 	const store = new Vuex.Store({
@@ -92,7 +92,7 @@ mapGetters 辅助函数仅仅是将 store 中的 getters 映射到局部计算�
 不能直接调用一个 mutation handler,这个选项更像是事件注册：“当触发一个类型为 increment 的 mutation 时，调用此函数。”要唤醒一个 mutation handler，你需要以相应的 type 调用 store.commit 方法
 >
 	store.commit('increment')
-##提交载荷（Payload）
+> ## 提交载荷（Payload）
 可以向 store.commit 传入额外的参数，即 mutation 的 载荷（payload）：
 >
 	// ...
@@ -119,16 +119,16 @@ mapGetters 辅助函数仅仅是将 store 中的 getters 映射到局部计算�
 	  type: 'increment',
 	  amount: 10
 	})
-##Mutations 需遵守 Vue 的响应规则
+Mutations 需遵守 Vue 的响应规则
 Vuex 中的 mutation 也需要与使用 Vue 一样遵守一些注意事项：
 1.最好提前在你的 store 中***初始化***好所有所需属性。
 2.当需要在对象上添加新属性时，你应该
 >
-	+使用 Vue.set(obj, 'newProp', 123), 或者 
-+以新对象替换老对象。例如，利用 stage-3 的对象展开运算符我们可以这样写：
+	使用 Vue.set(obj, 'newProp', 123), 或者 
+以新对象替换老对象。例如，利用 stage-3 的对象展开运算符我们可以这样写：
 >
 	state.obj={...state.obj,'newProp': 123};
-##使用常量替代 Mutation 事件类型
+> ## 使用常量替代 Mutation 事件类型
 >
 	/ mutation-types.js
 	export const SOME_MUTATION = 'SOME_MUTATION'
@@ -147,7 +147,7 @@ Vuex 中的 mutation 也需要与使用 Vue 一样遵守一些注意事项：
 	})
 ps:注意Mutation 事件类型需要包含在[]当中，而且mutation必须是同步函数
 
-##在组件中提交 Mutations
+> ## 在组件中提交 Mutations
 
 你可以在组件中使用 this.$store.commit('xxx') 提交 mutation，或者使用 mapMutations 辅助函数将组件中的 methods 映射为 store.commit 调用（需要在根节点注入 store）。
 >
@@ -157,10 +157,10 @@ ps:注意Mutation 事件类型需要包含在[]当中，而且mutation必须是�
 	  // ...
 	  methods: {
 	    ...mapMutations([
-	      'increment' // **映射 this.increment() 为 this.$store.commit('increment')**
+	      'increment' // 映射 this.increment() 为 this.$store.commit('increment')
 	    ]),
 	    ...mapMutations({
-	      add: 'increment' // **映射 this.add() 为 this.$store.commit('increment')**
+	      add: 'increment' //映射 this.add() 为 this.$store.commit('increment')
 	    })
 	  }
 	}
