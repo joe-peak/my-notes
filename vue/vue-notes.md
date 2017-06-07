@@ -195,3 +195,43 @@ v-if 也是***惰性***的：如果在初始渲染时条件为假，则什么也
 	  {{ index }}. {{ key }} : {{ value }}
 	</div>
 >***在遍历对象时，是按 Object.keys() 的结果遍历，但是不能保证它的结果在不同的 JavaScript 引擎下是一致的。***
+>
+> ## 注意事项
+由于 JavaScript 的限制， Vue 不能检测以下变动的数组：
+1.当你利用索引直接设置一个项时，例如： vm.items[indexOfItem] = newValue
+2.当你修改数组的长度时，例如： vm.items.length = newLength
+为了解决第一类问题，以下两种方式都可以实现和 vm.items[indexOfItem] = newValue 相同的效果， 同时也将触发状态更新：
+>
+	// Vue.set
+	Vue.set(example1.items, indexOfItem, newValue)
+>
+	// Array.prototype.splice`
+	example1.items.splice(indexOfItem, 1, newValue)
+为了解决第二类问题，你也同样可以使用 splice：
+>
+	example1.items.splice(newLength)
+>
+> ## 事件处理器
+有时也需要在内联语句处理器中访问原生 DOM 事件。可以用特殊变量 ***$event*** 把它传入方法：
+>
+	<button v-on:click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+>
+	// ...
+	methods: {
+	  warn: function (message, event) {
+	    // 现在我们可以访问原生事件对象
+	    if (event) event.preventDefault()
+	    alert(message)
+	  }
+	}
+>
+>self事件修饰符
+	<!-- 只当事件在该元素本身（而不是子元素）触发时触发回调 -->
+	<div v-on:click.self="doThat">...</div>
+
+> ## 表单控件
+复选框
+单个勾选框，***逻辑值***：
+>
+	<input type="checkbox" id="checkbox" v-model="checked">
+	<label for="checkbox">{{ checked }}</label>
