@@ -46,7 +46,7 @@ Mustache 不能在 HTML 属性中使用，应使用 v-bind 指令：
 >
 	<div :id="dynamicId"></div>
 >
-	模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问 __*用户定义的全局变量*__ 。
+	模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问用户定义的全局变量。
 >
 > ## 修饰符
 修饰符（Modifiers）是以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，.prevent 修饰符告诉 v-on 指令对于触发的事件调用 event.preventDefault()：
@@ -235,3 +235,133 @@ v-if 也是 __*惰性*__ 的：如果在初始渲染时条件为假，则什么�
 >
 	<input type="checkbox" id="checkbox" v-model="checked">
 	<label for="checkbox">{{ checked }}</label>
+多个勾选框，绑定到同一个数组：
+>
+	<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+	<label for="jack">Jack</label>
+	<input type="checkbox" id="john" value="John" v-model="checkedNames">
+	<label for="john">John</label>
+	<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+	<label for="mike">Mike</label>
+	<br>
+	<span>Checked names: {{ checkedNames }}</span>
+>
+	new Vue({
+	  el: '...',
+	  data: {
+	    checkedNames: []
+	  }
+	})
+	//选中的复选框的value值会添加到绑定的数组里面，取消选择则会移除对应的value
+单选按钮
+v-model的值是选中的按钮的value值
+单选择列表
+v-model指令绑定在select元素上，其值为选中的option的value值
+多选列表
+v-model值未一个数组，包含选中的option的value值。
+
+> ## 绑定 value
+复选框
+>
+	<input
+	  type="checkbox"
+	  v-model="toggle"
+	  :true-value="a"
+	  :false-value="b"
+	>
+>
+	// 当选中时
+	vm.toggle === vm.a
+	// 当没有选中时
+	vm.toggle === vm.b
+单选按钮
+>
+	input type="radio" v-model="pick" v-bind:value="a">
+	// 当选中时
+	vm.pick === vm.a
+选择列表设置
+>
+	<select v-model="selected">
+	    <!-- 内联对象字面量 -->
+	  <option v-bind:value="{ number: 123 }">123</option>
+	</select>
+>
+	// 当选中时
+	typeof vm.selected // -> 'object'
+	vm.selected.number // -> 123
+> ### 修饰符
+.lazy ,.number ,.trim
+
+>
+> ## 组件
+1.全局注册
+>
+	Vue.component('component-name', {
+	  // 选项
+	})
+ps:要确保在初始化父组件实例 之前 注册了组件
+2.局部注册
+通过使用组件实例选项注册，可以使组件仅在另一个实例/组件的作用域中可用：
+>
+	var Child = {
+	  template: '<div>A custom component!</div>'
+	}
+	new Vue({
+	  // ...
+	  components: {
+	    // <my-component> 将只在父模板可用
+	    'my-component': Child
+	  }
+	})
+
+	这种封装也适用于其它可注册的 Vue 功能，如指令。
+
+特殊的 __*is*__ 属性
+>
+	<table>
+  		<my-row>...</my-row>
+	</table>
+	//自定义组件以上用法无效，应该使用下面的变通使用方法
+	<table>
+	  <tr is="my-row"></tr>
+	</table>
+如果您使用来自以下来源之一的字符串模板，这些限制将不适用：
+-<script type="text/x-template">
+-JavaScript内联模版字符串
+-.vue 组件
+ps:组件中的data选项必须是一个函数
+
+*注意在 JavaScript 中对象和数组是引用类型，指向同一个内存空间，如果 prop 是一个对象或数组，在子组件内部改变它会影响父组件的状态。*
+props验证
+>
+	Vue.component('example', {
+	  props: {
+	    // 基础类型检测 （`null` 意思是任何类型都可以）
+	    propA: Number,
+	    // 多种类型
+	    propB: [String, Number],
+	    // 必传且是字符串
+	    propC: {
+	      type: String,
+	      required: true
+	    },
+	    // 数字，有默认值
+	    propD: {
+	      type: Number,
+	      default: 100
+	    },
+	    // 数组／对象的默认值应当由一个工厂函数返回
+	    propE: {
+	      type: Object,
+	      default: function () {
+	        return { message: 'hello' }
+	      }
+	    },
+	    // 自定义验证函数
+	    propF: {
+	      validator: function (value) {
+	        return value > 10
+	      }
+	    }
+	  }
+	})
