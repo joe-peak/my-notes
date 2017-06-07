@@ -166,7 +166,7 @@ v-if 也是***惰性***的：如果在初始渲染时条件为假，则什么也
 >可以用 of 替代 in 作为分隔符，因为它是最接近 JavaScript 迭代器的语法
 >
 	(item, index) of items
-> ##对象迭代 v-for
+> ## 对象迭代 v-for
 >
 	<ul id="repeat-object" class="demo">
 	  <li v-for="value in object">
