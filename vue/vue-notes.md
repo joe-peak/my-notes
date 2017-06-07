@@ -2,7 +2,7 @@
 独立构建:需要编译器编译，组件可以使用template选项，不兼容内容安全策略
 运行时构建：单独的组件不能使用template选项,只能使用render选项,但是在单文件组件中可以使用template选项，因为单文件组件在构建时最终会被预编译为render函数兼容内容安全策略
 >
->##命令行工具
+> ##命令行工具
 >
 	npm install -global vue-cli
 	vue init webpack project-name
@@ -11,7 +11,7 @@
 	npm install
 	npm run dev
 >
->##实例
+> ##实例
 可以扩展 Vue 构造器，从而用预定义选项创建可复用的组件构造器：
 >
 	let MyComponent = Vue.extends({
@@ -48,16 +48,16 @@ Mustache 不能在 HTML 属性中使用，应使用 v-bind 指令：
 >
 	模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问***用户定义的全局变量***。
 >
->##修饰符
+> ##修饰符
 修饰符（Modifiers）是以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，.prevent 修饰符告诉 v-on 指令对于触发的事件调用 event.preventDefault()：
 >
 	<form v-on:submit.prevent="onSubmit"></form>
 >
->##计算缓存 vs Methods
+> ##计算缓存 vs Methods
 ***计算属性是基于它们的依赖进行缓存的***。 计算属性只有在它的***相关依赖***发生改变时才会重新求值。这就意味着只要依赖message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而***不必再次执行函数****。相比而言，只要发生重新渲染，method 调用总会执行该函数。
 我们为什么需要缓存？假设我们有一个性能开销比较大的的计算属性 A ，它需要遍历一个极大的数组和做大量的计算。然后我们可能有其他的计算属性依赖于 A 。如果没有缓存，我们将不可避免的多次执行 A 的 getter！如果你不希望有缓存，请用 method 替代
 >
->##计算 setter
+> ##计算 setter
 计算属性默认只有 getter ，不过在需要时你也可以提供一个 setter ：
 >
 	//...
@@ -81,7 +81,7 @@ Mustache 不能在 HTML 属性中使用，应使用 v-bind 指令：
 >
 现在在运行 vm.fullName = 'John Doe' 时， setter 会被调用， vm.firstName 和 vm.lastName 也相应地会被更新。
 >
->##class
+> ##class
 可以在对象中传入更多属性用来动态切换多个 class 。此外， v-bind:class 指令可以与普通的 class 属性共存。如
 >
 	<div class="static"
@@ -90,7 +90,7 @@ Mustache 不能在 HTML 属性中使用，应使用 v-bind 指令：
 >
 当你在一个定制的组件上用到 class 属性的时候，这些类将被添加到***根元素***上面，这个元素上已经存在的类不会被覆盖。
 
->##绑定内联样式
+> ##绑定内联样式
 >
 对象语法
 对象语法十分直观——看着非常像 CSS ，其实它是一个 JavaScript 对象。 CSS 属性名可以用驼峰式（camelCase）或短横分隔命名（kebab-case）：
@@ -113,13 +113,13 @@ Mustache 不能在 HTML 属性中使用，应使用 v-bind 指令：
 	  }
 	}
 >
->##数组语法
+> ##数组语法
 v-bind:style 的数组语法可以将***多个样式对象***应用到一个元素上：
 >
 	<div v-bind:style="[baseStyles, overridingStyles]">
 >ps:当 v-bind:style 使用需要特定前缀的 CSS 属性时，如 transform ，Vue.js 会自动侦测并添加相应的前缀。
 >
->##多重值
+> ##多重值
 >
 >从 2.3 开始你可以为 style 绑定中的属性提供一个包含多个值的数组，常用于提供多个带前缀的值：
 >
