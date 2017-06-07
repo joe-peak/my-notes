@@ -23,7 +23,7 @@ Vuex 通过 __*store 选项*__ ，提供了一种机制将状态从根组件『�
 
 	export default {
 	  // ...
-	  computed: __*mapState*__ ({
+	  computed: mapState ({
 	    // 箭头函数可使代码更简练
 	    count: state => state.count,
 
@@ -140,7 +140,7 @@ Vuex 中的 mutation 也需要与使用 Vue 一样遵守一些注意事项：
 	  state: { ... },
 	  mutations: {
 	    // 我们可以使用 ES2015 风格的计算属性命名功能来使用一个常量作为函数名
-	    __*[SOME_MUTATION]*__ (state) {
+	    [SOME_MUTATION](state) {
 	      // mutate state
 	    }
 	  }
