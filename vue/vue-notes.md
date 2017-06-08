@@ -365,3 +365,134 @@ props验证
 	    }
 	  }
 	})
+
+> ## slot分发内容
+  编译作用域
+分发内容是在父作用域内编译。
+>单个 Slot
+除非子组件模板包含至少一个 *<slot>* 插口，否则父组件的内容将会被 *丢弃* 。当子组件模板只有一个没有属性的 slot 时，父组件整个内容片段将插入到 slot 所在的 DOM 位置，并替换掉 slot 标签本身。
+最初在 <slot> 标签中的任何内容都被视为备用内容。备用内容在子组件的作用域内编译，并且只有在宿主元素为空，且没有要插入的内容时才显示备用内容。
+假定 my-component 组件有下面模板：
+>
+	<div>
+	  <h2>我是子组件的标题</h2>
+	  <slot>
+	    只有在没有要分发的内容时才会显示。
+	  </slot>
+	</div>
+父组件模版
+>
+	<div>
+	  <h1>我是父组件的标题</h1>
+	  <my-component>
+	    <p>这是一些初始内容</p>
+	    <p>这是更多的初始内容</p>
+	  </my-component>
+	</div>
+渲染结果
+>
+	<div>
+	  <h1>我是父组件的标题</h1>
+	  <div>
+	    <h2>我是子组件的标题</h2>
+	    <p>这是一些初始内容</p>
+	    <p>这是更多的初始内容</p>
+	  </div>
+	</div>
+具名 Slot
+<slot> 元素可以用一个特殊的属性 __*name*__ 来配置如何分发内容。多个 slot 可以有不同的名字。 __*具名 slot 将匹配内容片段中有对应 slot 特性的元素*__。
+仍然可以有一个匿名 slot ，它是默认 slot ，作为找不到匹配的内容片段的备用插槽。如果没有默认的 slot ，这些找不到匹配的内容片段将被抛弃。
+例如，假定我们有一个 app-layout 组件，它的模板为：
+>
+	<div class="container">
+	  <header>
+	    <slot name="header"></slot>
+	  </header>
+	  <main>
+	    <slot></slot>
+	  </main>
+	  <footer>
+	    <slot name="footer"></slot>
+	  </footer>
+	</div>
+父组件模版:
+>
+	<app-layout>
+	  <h1 slot="header">这里可能是一个页面标题</h1>
+	  <p slot="footer">这里有一些联系信息</p>
+	  <p>主要内容的一个段落。</p>
+	  <p>另一个主要段落。</p>
+	</app-layout>
+渲染结果为：
+>
+	<div class="container">
+	  <header>
+	    <h1>这里可能是一个页面标题</h1>
+	  </header>
+	  <main>
+	    <p>主要内容的一个段落。</p>
+	    <p>另一个主要段落。</p>
+	  </main>
+	  <footer>
+	    <p>这里有一些联系信息</p>
+	  </footer>
+	</div>
+>作用域插槽
+在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：
+>
+	<div class="child">
+	  <slot text="hello from child"></slot>
+	</div>
+在父级中，具有特殊属性 __*scope*__ 的 <template> 元素，表示它是作用域插槽的模板。scope 的值对应一个临时变量名，此变量接收从子组件中传递的 prop 对象：
+	<div class="parent">
+	  <child>
+	    <template scope="props">
+	      <span>hello from parent</span>
+	      <span>{{ props.text }}</span>
+	    </template>
+	  </child>
+	</div>
+如果我们渲染以上结果，得到的输出会是：
+>
+	<div class="parent">
+	  <div class="child">
+	    <span>hello from parent</span>
+	    <span>hello from child</span>
+	  </div>
+	</div>
+作用域插槽更具代表性的用例是列表组件，允许组件自定义应该如何渲染列表每一项：
+>
+	<my-awesome-list :items="items">
+	  <!-- 作用域插槽也可以是具名的 -->
+	  <template slot="item" scope="props">
+	    <li class="my-fancy-item">{{ props.text }}</li>
+	  </template>
+	</my-awesome-list>
+列表组件的模板：
+>
+	<ul>
+	  <slot name="item"
+	    v-for="item in items"
+	    :text="item.text">
+	    <!-- 这里写入备用内容 -->
+	  </slot>
+	</ul>
+> ## 动态组件
+通过使用保留的 <component> 元素，动态地绑定到它的 is 特性，我们让多个组件可以使用同一个挂载点，并动态切换：
+>
+	var vm = new Vue({
+	  el: '#example',
+	  data: {
+	    currentView: 'home'
+	  },
+	  components: {
+	    home: { /* ... */ },
+	    posts: { /* ... */ },
+	    archive: { /* ... */ }
+	  }
+	})
+
+>
+	<component v-bind:is="currentView">
+	  <!-- 组件在 vm.currentview 变化时改变！ -->
+	</component>
