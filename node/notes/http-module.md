@@ -21,6 +21,6 @@ http.Server是http模块中的服务器对象。它提供了一套封装级别�
 > #### 1. http.Server 的事件
 http.Server 是一个基于事件的 HTTP 服务器，所有的请求都被封装为独立的事件,它继承自EventEmitter，提供了以下几个事件
 >
-1. __*request*__ ：当客户端请求到来时，该事件被触发，提供两个参数 req 和res，分别是 *__http.ServerRequest*__ 和 *__http.ServerResponse*__ 的实例，表示请求和响应信息。
-2. __*connection*__：当 TCP 连接建立时，该事件被触发，提供一个参数 *__socket*__ ，为net.Socket 的实例。 connection 事件的粒度要大于 request，因为客户端在
+1. __*request*__ ：当客户端请求到来时，该事件被触发，提供两个参数 req 和res，分别是 __*http.ServerRequest*__ 和 __*http.ServerResponse*__ 的实例，表示请求和响应信息。
+2. __*connection*__：当 TCP 连接建立时，该事件被触发，提供一个参数 __*socket*__ ，为net.Socket 的实例。 connection 事件的粒度要大于 request，因为客户端在
 Keep-Alive 模式下可能会在同一个连接内发送多次请求
