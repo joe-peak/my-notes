@@ -53,3 +53,79 @@ trailers |  HTTP 请求尾（不常见）
 connection |  当前 HTTP 连接套接字，为 net.Socket 的实例
 socket |  connection 属性的别名
 client |  client 属性的别名
+>
+> #### 3. 获取 GET 请求内容
+由于 GET 请求直接被嵌入在路径中，URL是完整的请求路径，包括了 ? 后面的部分，因此你可以手动解析后面的内容作为 GET请求的参数。 Node.js 的 url 模块中的 parse 函数提供了这个功能，例如：
+>
+	const http = require('http');
+	const util = require('util');
+	const url = require('url');
+	const port = '3030';
+	const hostname = 'localhost';
+	server = new http.Server();
+	server.on('request', (req, res) => {
+	  let parseUrl = url.parse(req.url, true);
+	  res.writeHead('200', { 'Content-Type': 'text/html' });
+	  res.write('<h1>Node Js</h1>');
+	  res.end(`<p>url: ${util.inspect(parseUrl, true, null, true)}</p>`);
+	});
+	server.listen(port, hostname, () => {
+	  console.log(`Server in running on the http://${hostname}:${port}`);
+	});
+通过 url.parse①，原始的 path 被解析为一个对象，其中 query 就是我们所谓的 GET请求的内容，而路径则是 pathname。
+>
+	 {
+	  protocol: 'http:',
+	  slashes: true,
+	  auth: null,
+	  host: 'localhost:3030',
+	  port: '3030',
+	  hostname: 'localhost',
+	  hash: null,
+	  search: '?name=byvoid&email=byvoid@byvoid.com',
+	  query: { name: 'byvoid', email: 'byvoid@byvoid.com' },
+	  pathname: '/user',
+	  path: '/user?name=byvoid&email=byvoid@byvoid.com',
+	  href: 'http://localhost:3030/user?name=byvoid&email=byvoid@byvoid.com' }
+>
+> ### 4. 获取 POST 请求内容
+POST 请求的内容全部都在请求体中。 Node.js 默认是不会解析请求体的，当你需要的时候，需要手动来做。实现方法：
+>
+	const http = require('http');
+	const querystring = require('querystring');
+	const util = require('util');
+
+	http.createServer((req, res) => {
+	  let data = '';
+	  /**
+	   * 开始接收到消息体(数据)
+	   */
+	  req.on('data', (chunk) => {
+	    data += chunk;
+	  });
+
+	  /**
+	   * 消息体(数据)接收完成
+	   */
+	  req.on('end', () => {
+	    res.end(util.inspect(querystring.parse(data)))
+	  });
+
+	}).listen('8080');
+>
+> ### 5. http.ServerResponse
+ __*http.ServerResponse*__ 是返回给客户端的信息，决定了用户最终能看到的结果。它也是由 http.Server 的 *__request*__ 事件发送的，作为第二个参数传递，一般简称为response 或 res。
+ http.ServerResponse 有三个重要的成员函数，用于 __*返回响应头*__、__*响应内容*__ 以及 __*结束请求*__
+ 1. response.writeHead(statusCode, [headers])：__*向请求的客户端发送响应头*__ 。
+statusCode 是 HTTP 状态码，如 200 （请求成功）、 404 （未找到）等。 headers
+是一个类似关联数组的对象，表示响应头的每个属性。该函数在一个请求内最多只
+能调用一次，如果不调用，则会自动生成一个响应头
+2. response.write(data, [encoding])：__*向请求的客户端发送响应内容*__ 。 data 是
+一个 Buffer 或字符串，表示要发送的内容。如果 data 是字符串，那么需要指定
+encoding 来说明它的编码方式，默认是 utf-8。在 response.end 调用之前，
+response.write 可以被多次调用。
+3. response.end([data], [encoding])：结束响应，告知客户端所有发送已经完
+成。当所有要返回的内容发送完毕的时候，该函数 必须 被调用一次。它接受两个可
+选参数，意义和 response.write 相同。如果不调用该函数，客户端将永远处于
+等待状态。
+
