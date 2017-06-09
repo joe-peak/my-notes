@@ -16,7 +16,7 @@ http.Server是http模块中的服务器对象。它提供了一套封装级别�
 	  console.log(`server is running on http://${hostname}:${port}`);
 	});
 >
-这段代码中， http.createServer 创建了一个 http.Server 的实例，将一个函数作为 HTTP 请求处理函数。这个函数接受两个参数，分别是请求对象（ req ）和响应对象（ res ）。在函数体内， res 显式地写回了响应代码 200 （表示请求成功），指定响应头为'Content-Type': 'text/html'，然后写入响应体 '<h1>Node.js</h1>'，通过 res.end结束并发送。最后该实例还调用了 listen 函数，启动服务器并监听 3000 端口
+这段代码中， http.createServer 创建了一个 http.Server 的实例，将一个函数作为 HTTP 请求处理函数。这个函数接受两个参数，分别是请求对象（ req ）和响应对象（ res ）。在函数体内， res 显式地写回了响应代码 200 （表示请求成功），指定响应头为'Content-Type': 'text/html'，然后写入响应体 '&lt;h1&gt;Node.js&lt;/h1&gt;'，通过 res.end结束并发送。最后该实例还调用了 listen 函数，启动服务器并监听 3000 端口
 >
 > #### 1. http.Server 的事件
 http.Server 是一个基于事件的 HTTP 服务器，所有的请求都被封装为独立的事件,它继承自EventEmitter，提供了以下几个事件
