@@ -1,0 +1,1 @@
+Test the open ,read methods of fs.
